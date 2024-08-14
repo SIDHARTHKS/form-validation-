@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Registration</h2>
+        <form id="form" onsubmit="return validate()" class="items">
+            <div class="inputs">
+                <label for="username">USERNAME</label><br>
+                <input id="username" type="text" name="username" required><br>
+            </div>
+            <div class="inputs">
+                <label for="phone">PHONE NUMBER</label><br>
+                <input id="phone" type="tel" name="phone" required><br>
+            </div>
+            <div class="inputs">
+                <label for="mail">EMAIL</label><br>
+                <input id="mail" type="email" name="email" required onkeyup="validatemail()"><br>
+                <span id="e_error" style="color:red;font-size: 12px"></span>
+            </div>
+            <div class="inputs">
+                <label for="pass">PASSWORD</label><br>
+                <input id="pass" type="password" name="password" required><br>
+                <span id="p_error" style="color:red;font-size: 12px"></span>
+            </div>
+            <div class="inputs">
+                <label for="cpass">CONFIRM PASSWORD</label><br>
+                <input id="cpass" type="password" name="confirm_password" required><br>
+                <span id="cp_error" style="color:red;font-size: 12px;"></span>
+            </div>
+            <div class="inputs">
+                <label for="file">UPLOAD FILE</label><br>
+                <input id="file" type="file" name="file" required onchange="validatefile()"><br>
+                <span id="f_error" style="color:red; font-size: 12px;"></span>
+            </div>
+            <div>
+                <button type="submit" class="submit">SUBMIT</button>
+            </div>
+        </form>
+    </div>
+</body>
+<script>
+    const phone = document.getElementById('phone');
+    const mail = document.getElementById('mail');
+    const e_error = document.getElementById('e_error');
+    const pass = document.getElementById('pass');
+    const cpass = document.getElementById('cpass');
+    const cp_error = document.getElementById('cp_error');
+    const file = document.getElementById('file');
+    const f_error = document.getElementById('f_error');
+
+    function validatephone() {
+        var phoneValue = phone.value;
+        var cleanedphone = phoneValue.replace(/\D/g, '');
+
+        if (cleanedphone.length !== 10) {
+            alert("Please enter a 10-digit phone number");
+            return false;
+        }
+        if (cleanedphone.charAt(0) === '0' || cleanedphone.charAt(0) === '1') {
+            alert("Please enter a valid phone number");
+            return false;
+        }
+        return true;
+    }
+
+    function validatemail() {
+        var pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!mail.value.match(pattern)) {
+            e_error.innerHTML = "Please enter a valid email.";
+            return false;
+        }
+        e_error.innerHTML = "";
+        return true;
+    }
+
+    function validatepass() {
+        if (cpass.value !== pass.value) {
+            cp_error.innerHTML = "Passwords don't match";
+            return false;
+        }
+        cp_error.innerHTML = "";
+        return true;
+    }
+
+    function validatefile() {
+        const fileValue = file.files[0];
+        const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.pdf)$/i;
+
+        if (!allowedExtensions.exec(fileValue.name)) {
+            f_error.innerHTML = "Invalid file type. Please upload a JPG, JPEG, PNG, or PDF file.";
+            file.value = "";
+            return false;
+        }
+
+        if (fileValue.size > 2 * 1024 * 1024) { // File size should be less than 2MB
+            f_error.innerHTML = "File size must be less than 2MB.";
+            file.value = "";
+            return false;
+        }
+
+        f_error.innerHTML = "";
+        return true;
+    }
+
+    function validate() {
+        var validPhone = validatephone();
+        var validEmail = validatemail();
+        var validPass = validatepass();
+        var validFile = validatefile();
+
+        if (validPhone && validEmail && validPass && validFile) {
+            alert("Registration completed successfully!");
+            return true;
+        }
+
+        return false;
+    }
+</script>
+</html>
